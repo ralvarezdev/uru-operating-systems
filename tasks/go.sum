@@ -1,0 +1,4 @@
+github.com/ralvarezdev/go-loader v0.2.15 h1:F0/YgR8VRK4WJpwQgoatKYS1hlt30tmQMn8va/BJ1AU=
+github.com/ralvarezdev/go-loader v0.2.15/go.mod h1:ECONwy/0yobzhBHzz7Cz/yYvS81fPRgi1j3/nEimQNo=
+github.com/ralvarezdev/go-strings v0.1.11 h1:3Vla7fGOs+4nyQ3NVaFz+XRP3CTv5JheGt0PXryBcMo=
+github.com/ralvarezdev/go-strings v0.1.11/go.mod h1:8sFOqmPJpqzS7bTjf91EzUCITnwpmkfifwY80GxV5r8=
