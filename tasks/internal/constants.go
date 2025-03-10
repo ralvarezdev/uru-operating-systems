@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	TimeUnit           = 1 * time.Millisecond
+	TimeUnit           = time.Millisecond
 	RecordFieldsNumber = 3
 	IdIndex            = 0
 	ArrivalTimeIndex   = 1
