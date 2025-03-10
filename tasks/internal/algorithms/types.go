@@ -13,7 +13,7 @@ type Task struct {
 	endTime        *int64
 	processingTime *int64
 	waitingTime    *int64
-	serviceIndex   *int64
+	serviceIndex   *float64
 	timeLeft       *int64
 }
 
@@ -36,7 +36,7 @@ func (t *Task) SetEndTime(endTime int64) {
 	// Calculate the processing time, waiting time and service index
 	processingTime := endTime - t.arrivalTime
 	waitingTime := processingTime - t.duration
-	serviceIndex := t.duration / processingTime
+	serviceIndex := float64(t.duration) / float64(processingTime)
 
 	// Set the end time, processing time, waiting time and service index
 	t.timeLeft = nil
@@ -82,7 +82,7 @@ func (t *Task) GetWaitingTime() *int64 {
 }
 
 // GetServiceIndex returns the service index of the task
-func (t *Task) GetServiceIndex() *int64 {
+func (t *Task) GetServiceIndex() *float64 {
 	return t.serviceIndex
 }
 
@@ -101,7 +101,7 @@ func (t *Task) String() string {
 			strconv.FormatInt(*t.endTime, 10),
 			strconv.FormatInt(*t.processingTime, 10),
 			strconv.FormatInt(*t.waitingTime, 10),
-			strconv.FormatInt(*t.serviceIndex, 10),
+			strconv.FormatFloat(*t.serviceIndex, 'f', -1, 64),
 		}, ",",
 	)
 }

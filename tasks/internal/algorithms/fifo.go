@@ -13,7 +13,10 @@ func FIFO(unprocessedTasks *[]*Task) *[]*Task {
 
 	// Iterate over the tasks list
 	for len(*unprocessedTasks) > 0 {
-		for i, unprocessedTask := range *unprocessedTasks {
+		for i := 0; i < len(*unprocessedTasks); i++ {
+			// Get the task
+			unprocessedTask := (*unprocessedTasks)[i]
+
 			if unprocessedTask.GetArrivalTime() <= currentTime {
 				hasBeenTasksProcessedOnCurrentIteration = true
 
@@ -34,9 +37,6 @@ func FIFO(unprocessedTasks *[]*Task) *[]*Task {
 
 				// Sleep
 				time.Sleep(time.Duration(unprocessedTask.GetDuration()) * internal.TimeUnit)
-			} else {
-				// Sleep
-				time.Sleep(internal.TimeUnit)
 				break
 			}
 		}
@@ -44,6 +44,9 @@ func FIFO(unprocessedTasks *[]*Task) *[]*Task {
 		// If no tasks have been processed on the current iteration, update the current time
 		if !hasBeenTasksProcessedOnCurrentIteration {
 			currentTime++
+
+			// Sleep
+			time.Sleep(internal.TimeUnit)
 		} else {
 			hasBeenTasksProcessedOnCurrentIteration = false
 		}

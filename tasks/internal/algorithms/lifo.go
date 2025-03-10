@@ -37,9 +37,6 @@ func LIFO(unprocessedTasks *[]*Task) *[]*Task {
 
 				// Sleep
 				time.Sleep(time.Duration(unprocessedTask.GetDuration()) * internal.TimeUnit)
-			} else {
-				// Sleep
-				time.Sleep(internal.TimeUnit)
 				break
 			}
 		}
@@ -47,6 +44,9 @@ func LIFO(unprocessedTasks *[]*Task) *[]*Task {
 		// If no tasks have been processed on the current iteration, update the current time
 		if !hasBeenTasksProcessedOnCurrentIteration {
 			currentTime++
+
+			// Sleep
+			time.Sleep(internal.TimeUnit)
 		} else {
 			hasBeenTasksProcessedOnCurrentIteration = false
 		}

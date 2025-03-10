@@ -7,42 +7,47 @@ import (
 
 // RoundRobin is a simple round-robin algorithm that selects the next task in the list of tasks
 func RoundRobin(quantum int64) func(*[]*Task) *[]*Task {
-	return func(tasks *[]*Task) *[]*Task {
+	return func(unprocessedTasks *[]*Task) *[]*Task {
 		var currentTime int64 = 0
 		processedTasks := make([]*Task, 0)
 		hasBeenTasksProcessedOnCurrentIteration := false
 
 		// Iterate over the tasks list
-		for len(*tasks) > 0 {
-			for i, task := range *tasks {
+		for len(*unprocessedTasks) > 0 {
+			for i := 0; i < len(*unprocessedTasks); {
 				// Get the task
-				if task.GetArrivalTime() <= currentTime {
+				unprocessedTask := (*unprocessedTasks)[i]
+
+				if unprocessedTask.GetArrivalTime() > currentTime {
+					i++
+				} else {
 					hasBeenTasksProcessedOnCurrentIteration = true
 
-					if *task.GetTimeLeft() > quantum {
+					if *unprocessedTask.GetTimeLeft() > quantum {
 						// Update the current time
 						currentTime += quantum
 
 						// Set the time left of the task
-						task.SetTimeLeft(*task.GetTimeLeft() - quantum)
+						unprocessedTask.SetTimeLeft(*unprocessedTask.GetTimeLeft() - quantum)
+						i++
 					} else {
 						// Update the current time
-						currentTime = currentTime + task.GetDuration()
+						currentTime += *unprocessedTask.GetTimeLeft()
 
 						// Set the end time of the task
-						task.SetEndTime(currentTime)
+						unprocessedTask.SetEndTime(currentTime)
 
 						// Append the task to the processed tasks list
-						processedTasks = append(processedTasks, task)
+						processedTasks = append(processedTasks, unprocessedTask)
 
 						// Remove the task from the unprocessed tasks list
-						*tasks = append(
-							(*tasks)[:i],
-							(*tasks)[i+1:]...,
+						*unprocessedTasks = append(
+							(*unprocessedTasks)[:i],
+							(*unprocessedTasks)[i+1:]...,
 						)
 
 						// Sleep
-						time.Sleep(time.Duration(task.GetDuration()) * internal.TimeUnit)
+						time.Sleep(time.Duration(unprocessedTask.GetDuration()) * internal.TimeUnit)
 					}
 				}
 			}

@@ -10,7 +10,9 @@ import (
 )
 
 const (
-	Menu = `--- Options ---
+	Menu = `
+--- Options ---
+
 1. FIFO
 2. LIFO
 3. Round Robin
@@ -27,54 +29,52 @@ func main() {
 	// Get the current directory
 	cwd, err := os.Getwd()
 	if err != nil {
-		fmt.Println("Error getting current directory:", err)
+		fmt.Println("Error getting current directory: ", err)
 		return
 	}
 	basePath := filepath.Join(cwd, DataFolder)
 
-	// Print the menu
-	fmt.Print(Menu)
-
 	for {
+		// Print the menu
+		fmt.Print(Menu)
+
 		// Get the option
 		var option string
 		optionLen, err := fmt.Scanln(&option)
 		if err != nil {
-			fmt.Println("Error reading option:", err)
-			return
+			fmt.Println("Error reading option: ", err)
+			continue
 		}
 
 		// Check if the option is empty
 		if optionLen == 0 {
 			fmt.Println("No option selected")
-			return
+			continue
 		}
 
 		// Parse the option
 		optionInt, err := strconv.Atoi(option)
 		if err != nil {
-			fmt.Println("Invalid option:", option)
-			return
+			fmt.Println("Invalid option: ", option)
+			continue
 		}
 
 		// Process the option
 		switch optionInt {
-		case 1:
-		case 2:
-		case 3:
+		case 1, 2, 3:
 			// Ask for the file path
 			fmt.Print("Enter the filename: ")
 			var filename string
 			filenameLen, err := fmt.Scanln(&filename)
 			if err != nil {
-				fmt.Println("Error reading the filename:", err)
-				return
+				fmt.Println("Error reading the filename: ", err)
+				continue
 			}
 
 			// Check if the filename is empty
 			if filenameLen == 0 {
 				fmt.Println("No filename entered")
-				return
+				continue
 			}
 
 			// Load the tasks
@@ -85,21 +85,24 @@ func main() {
 				),
 			)
 			if err != nil {
-				fmt.Println("Error loading tasks:", err)
-				return
+				fmt.Println("Error loading tasks: ", err)
+				continue
 			}
 
 			// Process the tasks
 			var processedTasks *[]*internalalgorithms.Task
+			var filenamePrefix string
 			switch optionInt {
 			case 1:
 				// FIFO
+				filenamePrefix = "fifo_"
 				processedTasks = internalalgorithms.Timing(
 					tasks,
 					internalalgorithms.FIFO,
 				)
 			case 2:
 				// LIFO
+				filenamePrefix = "lifo_"
 				processedTasks = internalalgorithms.Timing(
 					tasks,
 					internalalgorithms.LIFO,
@@ -110,24 +113,25 @@ func main() {
 				var quantum string
 				quantumLen, err := fmt.Scanln(&quantum)
 				if err != nil {
-					fmt.Println("Error reading the quantum:", err)
-					return
+					fmt.Println("Error reading the quantum: ", err)
+					continue
 				}
 
 				// Check if the quantum is empty
 				if quantumLen == 0 {
 					fmt.Println("No quantum entered")
-					return
+					continue
 				}
 
 				// Parse the quantum
 				quantumInt, err := strconv.Atoi(quantum)
 				if err != nil {
-					fmt.Println("Invalid quantum:", quantum)
-					return
+					fmt.Println("Invalid quantum: ", quantum)
+					continue
 				}
 
 				// Round Robin
+				filenamePrefix = "round_robin_" + quantum + "_"
 				roundRobinFn := internalalgorithms.RoundRobin(int64(quantumInt))
 				processedTasks = internalalgorithms.Timing(tasks, roundRobinFn)
 			}
@@ -136,25 +140,25 @@ func main() {
 			err = internaldata.WriteTasks(
 				filepath.Join(
 					basePath,
-					"processed_"+filename,
+					filenamePrefix+filename,
 				), processedTasks,
 			)
 			if err != nil {
-				fmt.Println("Error writing processed tasks:", err)
-				return
+				fmt.Println("Error writing processed tasks: ", err)
+				continue
 			}
 
 			// Print the fields statistics
 			fmt.Println(
-				"Mean waiting time:",
-				internalalgorithms.GetMeanWaitingTime(processedTasks),
-			)
-			fmt.Println(
-				"Mean processing time:",
+				"Mean processing time: ",
 				internalalgorithms.GetMeanProcessingTime(processedTasks),
 			)
 			fmt.Println(
-				"Mean service index:",
+				"Mean waiting time: ",
+				internalalgorithms.GetMeanWaitingTime(processedTasks),
+			)
+			fmt.Println(
+				"Mean service index: ",
 				internalalgorithms.GetMeanServiceIndex(processedTasks),
 			)
 		case 4:
