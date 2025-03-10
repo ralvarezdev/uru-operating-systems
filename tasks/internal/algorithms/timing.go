@@ -6,7 +6,10 @@ import (
 )
 
 // Timing is the function to time it takes to process a list of tasks using a given algorithm
-func Timing(unprocessedTasks *[]Task, algorithm func(*[]Task) *[]Task) *[]Task {
+func Timing(
+	unprocessedTasks *[]*Task,
+	algorithm func(*[]*Task) *[]*Task,
+) *[]*Task {
 	// Start the timer
 	start := time.Now()
 

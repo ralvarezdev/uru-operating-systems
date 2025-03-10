@@ -6,7 +6,6 @@ import (
 	gostringsconvert "github.com/ralvarezdev/go-strings/convert"
 	"github.com/ralvarezdev/uru-operating-systems/tasks/internal"
 	internalalgorithms "github.com/ralvarezdev/uru-operating-systems/tasks/internal/algorithms"
-	"time"
 )
 
 // LoadTasks reads the tasks from the file and returns them
@@ -27,7 +26,7 @@ func LoadTasks(path string) (*[]*internalalgorithms.Task, error) {
 	tasks := make([]*internalalgorithms.Task, 0)
 	for i, record := range *records {
 		var id string
-		var arrivalTime, duration int
+		var arrivalTime, duration int64
 
 		// Get the fields data as strings
 		if len(record) < internal.RecordFieldsNumber {
@@ -58,8 +57,8 @@ func LoadTasks(path string) (*[]*internalalgorithms.Task, error) {
 		// Create the task
 		task := internalalgorithms.NewTask(
 			id,
-			time.Duration(arrivalTime)*internal.TimeUnit,
-			time.Duration(duration)*internal.TimeUnit,
+			arrivalTime,
+			duration,
 		)
 		tasks = append(tasks, task)
 	}

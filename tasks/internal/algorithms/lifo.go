@@ -6,9 +6,9 @@ import (
 )
 
 // LIFO is the function to process the LIFO algorithm on a given list of tasks
-func LIFO(unprocessedTasks *[]Task) []Task {
-	currentTime := time.Duration(0) + internal.TimeUnit
-	processedTasks := make([]Task, 0)
+func LIFO(unprocessedTasks *[]*Task) *[]*Task {
+	var currentTime int64 = 0
+	processedTasks := make([]*Task, 0)
 	hasBeenTasksProcessedOnCurrentIteration := false
 
 	// Iterate over the tasks list
@@ -21,7 +21,7 @@ func LIFO(unprocessedTasks *[]Task) []Task {
 				hasBeenTasksProcessedOnCurrentIteration = true
 
 				// Update the current time
-				currentTime = currentTime + unprocessedTask.duration
+				currentTime += unprocessedTask.duration
 
 				// Set the end time of the task
 				unprocessedTask.SetEndTime(currentTime)
@@ -34,18 +34,23 @@ func LIFO(unprocessedTasks *[]Task) []Task {
 					(*unprocessedTasks)[:i],
 					(*unprocessedTasks)[i+1:]...,
 				)
+
+				// Sleep
+				time.Sleep(time.Duration(unprocessedTask.GetDuration()) * internal.TimeUnit)
 			} else {
+				// Sleep
+				time.Sleep(internal.TimeUnit)
 				break
 			}
 		}
 
 		// If no tasks have been processed on the current iteration, update the current time
 		if !hasBeenTasksProcessedOnCurrentIteration {
-			currentTime = currentTime + internal.TimeUnit
+			currentTime++
 		} else {
 			hasBeenTasksProcessedOnCurrentIteration = false
 		}
 	}
 
-	return processedTasks
+	return &processedTasks
 }

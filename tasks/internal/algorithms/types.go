@@ -1,42 +1,45 @@
 package algorithms
 
 import (
-	"time"
+	"strconv"
+	"strings"
 )
 
 // Task is a struct that represents a task
 type Task struct {
 	id             string
-	arrivalTime    time.Duration
-	duration       time.Duration
-	endTime        *time.Duration
-	processingTime *time.Duration
-	waitingTime    *time.Duration
-	serviceIndex   *time.Duration
-	timeLeft       *time.Duration
+	arrivalTime    int64
+	duration       int64
+	endTime        *int64
+	processingTime *int64
+	waitingTime    *int64
+	serviceIndex   *int64
+	timeLeft       *int64
 }
 
 // NewTask creates a new task
 func NewTask(
 	id string,
-	arrivalTime time.Duration,
-	duration time.Duration,
+	arrivalTime int64,
+	duration int64,
 ) *Task {
 	return &Task{
 		id:          id,
 		arrivalTime: arrivalTime,
 		duration:    duration,
+		timeLeft:    &duration,
 	}
 }
 
 // SetEndTime sets the end time of the task
-func (t *Task) SetEndTime(endTime time.Duration) {
+func (t *Task) SetEndTime(endTime int64) {
 	// Calculate the processing time, waiting time and service index
 	processingTime := endTime - t.arrivalTime
 	waitingTime := processingTime - t.duration
 	serviceIndex := t.duration / processingTime
 
 	// Set the end time, processing time, waiting time and service index
+	t.timeLeft = nil
 	t.endTime = &endTime
 	t.processingTime = &processingTime
 	t.waitingTime = &waitingTime
@@ -44,7 +47,7 @@ func (t *Task) SetEndTime(endTime time.Duration) {
 }
 
 // SetTimeLeft sets the time left of the task
-func (t *Task) SetTimeLeft(timeLeft time.Duration) {
+func (t *Task) SetTimeLeft(timeLeft int64) {
 	t.timeLeft = &timeLeft
 }
 
@@ -54,36 +57,51 @@ func (t *Task) GetID() string {
 }
 
 // GetArrivalTime returns the arrival time of the task
-func (t *Task) GetArrivalTime() time.Duration {
+func (t *Task) GetArrivalTime() int64 {
 	return t.arrivalTime
 }
 
 // GetDuration returns the duration of the task
-func (t *Task) GetDuration() time.Duration {
+func (t *Task) GetDuration() int64 {
 	return t.duration
 }
 
 // GetEndTime returns the end time of the task
-func (t *Task) GetEndTime() *time.Duration {
+func (t *Task) GetEndTime() *int64 {
 	return t.endTime
 }
 
 // GetProcessingTime returns the processing time of the task
-func (t *Task) GetProcessingTime() *time.Duration {
+func (t *Task) GetProcessingTime() *int64 {
 	return t.processingTime
 }
 
 // GetWaitingTime returns the waiting time of the task
-func (t *Task) GetWaitingTime() *time.Duration {
+func (t *Task) GetWaitingTime() *int64 {
 	return t.waitingTime
 }
 
 // GetServiceIndex returns the service index of the task
-func (t *Task) GetServiceIndex() *time.Duration {
+func (t *Task) GetServiceIndex() *int64 {
 	return t.serviceIndex
 }
 
 // GetTimeLeft returns the time left of the task
-func (t *Task) GetTimeLeft() *time.Duration {
+func (t *Task) GetTimeLeft() *int64 {
 	return t.timeLeft
+}
+
+// String returns the string representation of the task
+func (t *Task) String() string {
+	return strings.Join(
+		[]string{
+			t.id,
+			strconv.FormatInt(t.arrivalTime, 10),
+			strconv.FormatInt(t.duration, 10),
+			strconv.FormatInt(*t.endTime, 10),
+			strconv.FormatInt(*t.processingTime, 10),
+			strconv.FormatInt(*t.waitingTime, 10),
+			strconv.FormatInt(*t.serviceIndex, 10),
+		}, ",",
+	)
 }
