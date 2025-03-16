@@ -150,16 +150,16 @@ func main() {
 
 			// Print the fields statistics
 			fmt.Println(
-				"Mean processing time: ",
-				internalalgorithms.GetMeanProcessingTime(processedTasks),
+				"Average processing time: ",
+				internalalgorithms.GetAverageProcessingTime(processedTasks),
 			)
 			fmt.Println(
-				"Mean waiting time: ",
-				internalalgorithms.GetMeanWaitingTime(processedTasks),
+				"Average waiting time: ",
+				internalalgorithms.GetAverageWaitingTime(processedTasks),
 			)
 			fmt.Println(
-				"Mean service index: ",
-				internalalgorithms.GetMeanServiceIndex(processedTasks),
+				"Average service index: ",
+				internalalgorithms.GetAverageServiceIndex(processedTasks),
 			)
 		case 4:
 			// Exit

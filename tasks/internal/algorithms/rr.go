@@ -30,9 +30,15 @@ func RoundRobin(quantum int64) func(*[]*Task) *[]*Task {
 						// Set the time left of the task
 						unprocessedTask.SetTimeLeft(*unprocessedTask.GetTimeLeft() - quantum)
 						i++
+
+						// Sleep
+						time.Sleep(time.Duration(quantum) * internal.TimeUnit)
 					} else {
 						// Update the current time
 						currentTime += *unprocessedTask.GetTimeLeft()
+
+						// Sleep
+						time.Sleep(time.Duration(*unprocessedTask.GetTimeLeft()) * internal.TimeUnit)
 
 						// Set the end time of the task
 						unprocessedTask.SetEndTime(currentTime)
@@ -45,9 +51,6 @@ func RoundRobin(quantum int64) func(*[]*Task) *[]*Task {
 							(*unprocessedTasks)[:i],
 							(*unprocessedTasks)[i+1:]...,
 						)
-
-						// Sleep
-						time.Sleep(time.Duration(unprocessedTask.GetDuration()) * internal.TimeUnit)
 					}
 				}
 			}
